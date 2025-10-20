@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    image: antiamyloid-tracker:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/antiamyloid.db
+    volumes:
+      - antiamyloid_data:/app/data
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+volumes:
+  antiamyloid_data:
