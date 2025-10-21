@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>New Infusion</h3>
+<form method="post">
+  <input type="hidden" name="patient_id" value="{{ patient.id }}">
+  <div class="grid">
+    <label>
+      Plan
+      <select name="plan_id" required>
+        {% for plan in plans %}
+          <option value="{{ plan.id }}">{{ plan.drug_name|capitalize }} (q{{ plan.interval_days }}d)</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Date
+      <input type="date" name="date" required>
+    </label>
+  </div>
+  <div>
+    <label>
+      Status
+      <select name="status">
+        <option value="scheduled">Scheduled</option>
+        <option value="completed">Completed</option>
+      </select>
+    </label>
+  </div>
+  <div>
+    <button type="submit">Save</button>
+    <a role="button" class="secondary" href="{{ url_for('patient_show', patient_id=patient.id) }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

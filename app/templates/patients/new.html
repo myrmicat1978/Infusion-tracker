@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Register Patient</h3>
+<form method="post">
+  <div class="grid">
+    <label>
+      Full name
+      <input type="text" name="full_name" placeholder="Jane Doe" required>
+    </label>
+    <label>
+      Medical record number (optional)
+      <input type="text" name="medical_record_number" placeholder="MRN1234">
+    </label>
+  </div>
+  <div class="grid">
+    <label>
+      Date of birth
+      <input type="date" name="date_of_birth" id="dob">
+    </label>
+    <label>
+      Age (auto)
+      <input type="text" id="age" readonly>
+    </label>
+  </div>
+  <div>
+    <button type="submit">Save</button>
+    <a role="button" class="secondary" href="{{ url_for('patients_index') }}">Cancel</a>
+  </div>
+</form>
+<script>
+  function computeAgeFromDob(dobStr) {
+    if (!dobStr) return '';
+    const dob = new Date(dobStr + 'T00:00:00');
+    const now = new Date();
+    let age = now.getFullYear() - dob.getFullYear();
+    const m = now.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) {
+      age--;
+    }
+    return age < 0 ? '' : String(age);
+  }
+  const dobEl = document.getElementById('dob');
+  const ageEl = document.getElementById('age');
+  function updateAge() { ageEl.value = computeAgeFromDob(dobEl.value); }
+  dobEl.addEventListener('change', updateAge);
+  dobEl.addEventListener('keyup', updateAge);
+  updateAge();
+</script>
+{% endblock %}

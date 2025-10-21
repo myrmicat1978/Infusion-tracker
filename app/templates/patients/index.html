@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Patients</h3>
+<p>
+  <a role="button" href="{{ url_for('patients_new') }}">Register new patient</a>
+</p>
+<table class="table-small">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>DOB</th>
+      <th>Age</th>
+      <th class="nowrap">Completed infusions</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in patients %}
+    <tr>
+      <td><a href="{{ url_for('patient_show', patient_id=p.id) }}">{{ p.full_name }}</a></td>
+      <td>{{ p.date_of_birth.isoformat() if p.date_of_birth else '-' }}</td>
+      <td>{{ p.date_of_birth|age }}</td>
+      <td>{{ completed_counts.get(p.id, 0) }}</td>
+      <td>
+        <a href="{{ url_for('patient_show', patient_id=p.id) }}">View</a>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5"><em class="muted">No patients yet</em></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
