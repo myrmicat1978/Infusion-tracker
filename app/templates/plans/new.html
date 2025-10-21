@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>New Treatment Plan</h3>
+<form method="post">
+  <input type="hidden" name="patient_id" value="{{ patient.id }}">
+  <div class="grid">
+    <label>
+      Drug
+      <select name="drug_name" required>
+        <option value="lecanemab">Lecanemab</option>
+        <option value="donanemab">Donanemab</option>
+      </select>
+    </label>
+    <label>
+      Interval days (optional)
+      <input type="number" name="interval_days" min="1" placeholder="Auto by drug">
+    </label>
+  </div>
+  <div class="grid">
+    <label>
+      Start date
+      <input type="date" name="start_date" required>
+    </label>
+    <label>
+      Planned infusions (optional)
+      <input type="number" name="num_planned_infusions" min="1">
+    </label>
+  </div>
+  <label>
+    Notes
+    <textarea name="notes" rows="3"></textarea>
+  </label>
+  <div>
+    <button type="submit">Create</button>
+    <a role="button" class="secondary" href="{{ url_for('patient_show', patient_id=patient.id) }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

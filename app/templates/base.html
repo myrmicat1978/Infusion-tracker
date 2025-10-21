@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Antiamyloid Infusion Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    .muted { color: #777; }
+    .danger { color: #b00020; }
+    .success { color: #1b5e20; }
+    .nowrap { white-space: nowrap; }
+    .table-small td, .table-small th { padding: .35rem .5rem; }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>Infusion Tracker</strong></li>
+    </ul>
+    <ul>
+      <li><a href="{{ url_for('patients_index') }}">Patients</a></li>
+      <li><a href="{{ url_for('patients_new') }}">Register Patient</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div>
+          {% for category, message in messages %}
+            <p class="{{ 'success' if category=='success' else 'danger' if category=='error' else '' }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

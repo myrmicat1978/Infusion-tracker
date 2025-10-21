@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>{{ patient.full_name }}</h3>
+<p class="muted">DOB: {{ patient.date_of_birth.isoformat() if patient.date_of_birth else '-' }} | Age: {{ patient.date_of_birth|age }}</p>
+
+<section>
+  <h4>Treatment Plans</h4>
+  <p><a role="button" href="{{ url_for('plans_new', patient_id=patient.id) }}">New plan</a></p>
+  <table class="table-small">
+    <thead>
+      <tr>
+        <th>Drug</th>
+        <th>Interval (days)</th>
+        <th>Start date</th>
+        <th>Notes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for plan in plans %}
+      <tr>
+        <td class="nowrap">{{ plan.drug_name|capitalize }}</td>
+        <td>{{ plan.interval_days }}</td>
+        <td>{{ plan.start_date.isoformat() }}</td>
+        <td>{{ plan.notes or '-' }}</td>
+        <td>
+          <form method="post" action="{{ url_for('plans_schedule_next', plan_id=plan.id) }}" style="display:inline">
+            <button type="submit">Schedule next</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5"><em class="muted">No plans</em></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h4>Infusions</h4>
+  <p><a role="button" href="{{ url_for('infusions_new', patient_id=patient.id) }}">Add infusion</a></p>
+  <table class="table-small">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Plan</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for inf in infusions %}
+      <tr>
+        <td class="nowrap">{{ (inf.actual_date or inf.scheduled_date).isoformat() }}</td>
+        <td>{{ inf.status }}</td>
+        <td class="nowrap">{{ inf.plan.drug_name|capitalize }}</td>
+        <td>
+          {% if inf.status != 'completed' %}
+          <form method="post" action="{{ url_for('infusion_complete', infusion_id=inf.id) }}" style="display:inline">
+            <input type="date" name="actual_date">
+            <button type="submit">Mark completed</button>
+          </form>
+          {% else %}
+          <span class="muted">Completed</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4"><em class="muted">No infusions</em></td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p><strong>Completed infusions:</strong> {{ completed_count }}</p>
+</section>
+{% endblock %}
